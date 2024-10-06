@@ -113,7 +113,7 @@ begin
 		select @ErrorMessage = concat('Обработано строк: ', @RowCount)
 		
 		raiserror(@ErrorMessage, 1, 1)
-
+		
 		-- Формирование таблицы для отчетности
 		select top 100
 			Season as 'Сезон'
