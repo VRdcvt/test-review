@@ -7,19 +7,20 @@ begin
 	declare @RowCount int = (select count(*) from syn.SA_CustomerSeasonal)
 	declare @ErrorMessage varchar(max)
 
--- Проверка на корректность загрузки
+	-- Проверка на корректность загрузки
 	if not exists (
-	select 1
-	from syn.ImportFile as imf
-	where f.ID = @ID_Record
-		and f.FlagLoaded = cast(1 as bit)
+		select 1
+		from syn.ImportFile as imf
+		where f.ID = @ID_Record
+			and f.FlagLoaded = cast(1 as bit)
 	)
-		begin
-			set @ErrorMessage = 'Ошибка при загрузке файла, проверьте корректность данных'
+	
+	begin
+		set @ErrorMessage = 'Ошибка при загрузке файла, проверьте корректность данных'
 
-			raiserror(@ErrorMessage, 3, 1)
-			return
-		end
+		raiserror(@ErrorMessage, 3, 1)
+		return
+	end
 
 	--Чтение из слоя временных данных
 	select
@@ -57,11 +58,11 @@ begin
 		end as Reason
 	into #BadInsertedRows
 	from syn.SA_CustomerSeasonal as cs
-	left join dbo.Customer as c on c.UID_DS = cs.UID_DS_Customer
-		and c.ID_mapping_DataSource = 1
-	left join dbo.Customer as c_dist on c_dist.UID_DS = cs.UID_DS_CustomerDistributor and c_dist.ID_mapping_DataSource = 1
-	left join dbo.Season as s on s.Name = cs.Season
-	left join syn.CustomerSystemType as cst on cst.Name = cs.CustomerSystemType
+		left join dbo.Customer as c on c.UID_DS = cs.UID_DS_Customer
+			and c.ID_mapping_DataSource = 1
+		left join dbo.Customer as c_dist on c_dist.UID_DS = cs.UID_DS_CustomerDistributor and c_dist.ID_mapping_DataSource = 1
+		left join dbo.Season as s on s.Name = cs.Season
+		left join syn.CustomerSystemType as cst on cst.Name = cs.CustomerSystemType
 	where cc.ID is null
 		or cd.ID is null
 		or s.ID is null
