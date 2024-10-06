@@ -57,13 +57,20 @@ begin
 	select
 		cs.*
 		,case
-			when c.ID is null then 'UID клиента отсутствует в справочнике "Клиент"'
-			when c_dist.ID is null then 'UID дистрибьютора отсутствует в справочнике "Клиент"'
-			when s.ID is null then 'Сезон отсутствует в справочнике "Сезон"'
-			when cst.ID is null then 'Тип клиента отсутствует в справочнике "Тип клиента"'
-			when try_cast(cs.DateBegin as date) is null then 'Невозможно определить Дату начала'
-			when try_cast(cs.DateEnd as date) is null then 'Невозможно определить Дату окончания'
-			when try_cast(isnull(cs.FlagActive, 0) as bit) is null then 'Невозможно определить Активность'
+			when c.ID is null
+				then 'UID клиента отсутствует в справочнике "Клиент"'
+			when c_dist.ID is null
+				then 'UID дистрибьютора отсутствует в справочнике "Клиент"'
+			when s.ID is null
+				then 'Сезон отсутствует в справочнике "Сезон"'
+			when cst.ID is null
+				then 'Тип клиента отсутствует в справочнике "Тип клиента"'
+			when try_cast(cs.DateBegin as date) is null
+				then 'Невозможно определить Дату начала'
+			when try_cast(cs.DateEnd as date) is null
+				then 'Невозможно определить Дату окончания'
+			when try_cast(isnull(cs.FlagActive, 0) as bit) is null
+				then 'Невозможно определить Активность'
 		end as Reason
 	into #BadInsertedRows
 	from syn.SA_CustomerSeasonal as cs
