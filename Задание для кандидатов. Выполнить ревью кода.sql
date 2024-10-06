@@ -19,7 +19,6 @@ begin
 		where imf.ID = @ID_Record
 			and imf.FlagLoaded = cast(1 as bit)
 	)
-	
 	begin
 		set @ErrorMessage = 'Ошибка при загрузке файла, проверьте корректность данных'
 	
