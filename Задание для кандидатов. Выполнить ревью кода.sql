@@ -87,7 +87,7 @@ begin
 		or try_cast(isnull(cs.FlagActive, 0) as bit) is null
 
 	-- Обработка данных из файла
-	merge into syn.CustomerSeasonal as cs
+	merge syn.CustomerSeasonal as t
 	using (
 		select
 			cs_temp.ID_dbo_Customer
@@ -98,22 +98,20 @@ begin
 			,cs_temp.ID_dbo_CustomerDistributor
 			,cs_temp.FlagActive
 		from #CustomerSeasonal as cs_temp
-	) as s on s.ID_dbo_Customer = cs.ID_dbo_Customer
-		and s.ID_Season = cs.ID_Season
-		and s.DateBegin = cs.DateBegin
-	when matched 
-		and cs.ID_CustomerSystemType <> s.ID_CustomerSystemType then
+	) as s on s.ID_dbo_Customer = t.ID_dbo_Customer
+		and s.ID_Season = t.ID_Season
+		and s.DateBegin = t.DateBegin
+	when matched and t.ID_CustomerSystemType <> s.ID_CustomerSystemType then
 		update
 		set
-			ID_CustomerSystemType = s.ID_CustomerSystemType
-			,DateEnd = s.DateEnd
-			,ID_dbo_CustomerDistributor = s.ID_dbo_CustomerDistributor
-			,FlagActive = s.FlagActive
-		from syn.CustomerSeasonal as cs
+			t.ID_CustomerSystemType = s.ID_CustomerSystemType
+			,t.DateEnd = s.DateEnd
+			,t.ID_dbo_CustomerDistributor = s.ID_dbo_CustomerDistributor
+			,t.FlagActive = s.FlagActive
+		from syn.CustomerSeasonal as t
 	when not matched then
 		insert (ID_dbo_Customer, ID_CustomerSystemType, ID_Season, DateBegin, DateEnd, ID_dbo_CustomerDistributor, FlagActive)
-		values (s.ID_dbo_Customer, s.ID_CustomerSystemType, s.ID_Season, s.DateBegin, s.DateEnd, s.ID_dbo_CustomerDistributor, s.FlagActive)
-	;
+		values (s.ID_dbo_Customer, s.ID_CustomerSystemType, s.ID_Season, s.DateBegin, s.DateEnd, s.ID_dbo_CustomerDistributor, s.FlagActive);
 
 	-- Информационное сообщение
 	begin
