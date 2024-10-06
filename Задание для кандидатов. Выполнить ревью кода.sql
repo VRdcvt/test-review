@@ -4,8 +4,10 @@ as
 set nocount on
 
 begin
+	declare
+		@ErrorMessage varchar(max)
+	
 	declare @RowCount int = (select count(*) from syn.SA_CustomerSeasonal)
-	declare @ErrorMessage varchar(max)
 
 	-- Проверка на корректность загрузки
 	if not exists (
