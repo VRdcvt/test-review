@@ -8,7 +8,7 @@ set nocount on
 
 begin
 	declare
-		@ErrorMessage varchar(max)
+		@ErrorMessage varchar(8000)
 	
 	declare @RowCount int = (select count(*) from syn.SA_CustomerSeasonal)
 
