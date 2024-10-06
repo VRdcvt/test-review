@@ -22,6 +22,7 @@ begin
 	
 	begin
 		set @ErrorMessage = 'Ошибка при загрузке файла, проверьте корректность данных'
+	
 		raiserror(@ErrorMessage, 3, 1)
 		return
 	end
@@ -110,6 +111,7 @@ begin
 	-- Информационное сообщение
 	begin
 		select @ErrorMessage = concat('Обработано строк: ', @RowCount)
+		
 		raiserror(@ErrorMessage, 1, 1)
 
 		-- Формирование таблицы для отчетности
